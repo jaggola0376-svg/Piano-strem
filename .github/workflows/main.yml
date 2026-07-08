@@ -1,0 +1,23 @@
+name: YouTube Live Stream
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch: # يتيح لك تشغيل وإيقاف البث بضغطة زر يدويًا
+
+jobs:
+  stream:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Install FFmpeg
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y ffmpeg
+
+    - name: Start Live Stream
+      run: |
+        ffmpeg -re -stream_loop -1 -i video.mp4 -f lavfi -i sine=frequency=440:sample_rate=44100 -c:v libx264 -pix_fmt yuv420p -preset veryfast -b:v 2000k -c:a aac -b:a 128k -ar 44100 -f flv rtmps://://youtube.com
+        
