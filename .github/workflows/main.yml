@@ -19,8 +19,8 @@ jobs:
 
     - name: Start Live Stream
       env:
-        # سحب مفتاح البث المشفر بأمان من إعدادات المستودع
         STREAM_KEY: ${{ secrets.YOUTUBE_STREAM_KEY }}
       run: |
-        ffmpeg -re -stream_loop -1 -i video.mp4 -f lavfi -i sine=frequency=440:sample_rate=44100 -c:v libx264 -pix_fmt yuv420p -preset veryfast -b:v 2000k -c:a aac -b:a 128k -ar 44100 -f flv "rtmps://://youtube.com"
+        # توليد خلفية مرئية متحركة ملونة برمجياً مع صوت موسيقى مستمر وبدون ملفات خارجية
+        ffmpeg -f lavfi -i testsrc=size=1280x720:rate=30 -f lavfi -i sine=frequency=440:sample_rate=44100 -c:v libx264 -pix_fmt yuv420p -preset veryfast -b:v 2000k -c:a aac -b:a 128k -ar 44100 -f flv "rtmps://://youtube.com"
         
