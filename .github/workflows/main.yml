@@ -3,14 +3,14 @@ name: YouTube Live Stream
 on:
   push:
     branches: [ "main" ]
-  workflow_dispatch: # يتيح لك تشغيل وإيقاف البث بضغطة زر يدويًا
+  workflow_dispatch:
 
 jobs:
   stream:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Install FFmpeg
       run: |
@@ -18,6 +18,9 @@ jobs:
         sudo apt-get install -y ffmpeg
 
     - name: Start Live Stream
+      env:
+        # سحب مفتاح البث المشفر بأمان من إعدادات المستودع
+        STREAM_KEY: ${{ secrets.YOUTUBE_STREAM_KEY }}
       run: |
-        ffmpeg -re -stream_loop -1 -i video.mp4 -f lavfi -i sine=frequency=440:sample_rate=44100 -c:v libx264 -pix_fmt yuv420p -preset veryfast -b:v 2000k -c:a aac -b:a 128k -ar 44100 -f flv rtmps://://youtube.com
+        ffmpeg -re -stream_loop -1 -i video.mp4 -f lavfi -i sine=frequency=440:sample_rate=44100 -c:v libx264 -pix_fmt yuv420p -preset veryfast -b:v 2000k -c:a aac -b:a 128k -ar 44100 -f flv "rtmps://://youtube.com"
         
